@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dimitry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0));
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #505050;
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        nav a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #505050;
+        }
+
+        .login-btn {
+            background-color: #505050;
+            padding: 8px 20px;
+            border-radius: 4px;
+        }
+
+        .login-btn:hover {
+            background-color: #505050;
+            color: #ffffff !important;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.3)), 
+                        url('/placeholder.svg?height=1080&width=1920');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 600px;
+            margin-top: 80px;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: #aaaaaa;
+            margin-bottom: 10px;
+        }
+
+        .hero-title {
+            font-size: 72px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        .hero-description {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: #cccccc;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary {
+            background-color: rgba(255,255,255,0.1);
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .btn-primary {
+            background-color: #505050;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #505050;
+        }
+
+        /* Category Navigation */
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 30px 50px;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .category-item {
+            font-size: 16px;
+            font-weight: 600;
+            color: #aaaaaa;
+            cursor: pointer;
+            transition: color 0.3s;
+            position: relative;
+            padding-bottom: 5px;
+        }
+
+        .category-item:hover,
+        .category-item.active {
+            color: #ffffff;
+        }
+
+        .category-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: #505050;
+        }
+
+        /* Movie Carousel Section */
+        .carousel-section {
+            padding: 50px 50px 80px;
+        }
+
+        .carousel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .carousel-title {
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .carousel-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background-color: #505050;
+            border-radius: 2px;
+        }
+
+        .select-all {
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .carousel-container {
+            position: relative;
+        }
+
+        .carousel-wrapper {
+            overflow: hidden;
+            padding: 20px 0;
+            cursor: grab;
+        }
+
+        .carousel-wrapper:active {
+            cursor: grabbing;
+        }
+
+        .carousel {
+            display: flex;
+            gap: 20px;
+            transition: transform 0.5s ease;
+        }
+
+        .movie-card {
+            flex: 0 0 calc(25% - 15px);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 3px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .movie-card:hover .movie-poster {
+            border-color: #505050;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0,0,0,0.7);
+            color: #505050;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .carousel-btn:hover {
+            background-color: rgba(62, 58, 58, 0.9);
+            color: #ffffff;
+        }
+
+        .carousel-btn.prev {
+            left: -25px;
+        }
+
+        .carousel-btn.next {
+            right: -25px;
+        }
+
+        /* Movie Details Section */
+        .details-section {
+            padding: 50px;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.7));
+            display: flex;
+            gap: 50px;
+        }
+
+        .movie-info {
+            flex: 1;
+        }
+
+        .movie-category {
+            display: inline-block;
+            background-color: #505050;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .movie-title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .movie-meta {
+            font-size: 14px;
+            color: #aaaaaa;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            color: #aaaaaa;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .movie-description {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #cccccc;
+            margin-bottom: 30px;
+        }
+
+        .trending-section {
+            flex: 0 0 400px;
+        }
+
+        .trending-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .trending-video {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .trending-video img {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.3);
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background-color: rgba(255,255,255,0.5);
+        }
+
+        .see-more-btn {
+            text-align: center;
+            color: #aaaaaa;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .watch-now-btn {
+            width: 100%;
+            background-color: #505050;
+            color: #ffffff;
+            padding: 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .watch-now-btn:hover {
+            background-color: #505050;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 50px;
+            background-color: #000000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .creator-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #333333;
+        }
+
+        .creator-text {
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+
+        .creator-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .footer-badge {
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            nav {
+                gap: 15px;
+            }
+
+            nav a {
+                font-size: 12px;
+            }
+
+            .hero {
+                height: 80vh;
+                padding: 0 20px;
+            }
+
+            .hero-content {
+                margin-top: 60px;
+            }
+
+            .hero-title {
+                font-size: 42px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .categories {
+                padding: 20px;
+                gap: 20px;
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+
+            .category-item {
+                font-size: 14px;
+                white-space: nowrap;
+            }
+
+            .carousel-section {
+                padding: 30px 20px;
+            }
+
+            .movie-card {
+                flex: 0 0 calc(50% - 10px);
+            }
+
+            .carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .carousel-btn.prev {
+                left: -10px;
+            }
+
+            .carousel-btn.next {
+                right: -10px;
+            }
+
+            .details-section {
+                padding: 30px 20px;
+                flex-direction: column;
+            }
+
+            .movie-title {
+                font-size: 32px;
+            }
+
+            .trending-section {
+                flex: 1;
+            }
+
+            footer {
+                padding: 20px;
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movie-card {
+                flex: 0 0 calc(100% - 10px);
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            nav a:not(.login-btn) {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="background-music" src="heavy.mp3" loop playsinline></audio>
+
+    <!-- Header -->
+    <header>
+        
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-subtitle">To My Dearest</div>
+            <h1 class="hero-title">DIMITRY</h1>
+            <p class="hero-description">
+                For the one with whom i want to succeed. the one whom i want to build a future with. i have a small name i use, one that might sound strange to others “Dimitry”. not something carefully chosen, just a name that felt right, the moment Rafli became a quiet place to return to. this website isnt a monument, dont worry... im not counting days with a red marker on the calendar. its just a small space for things that dont fit neatly in my head, but feel to precious to forget.
+                we've known each other for quite some time, yes 2 years, but lets just say “around that,” so it doesnt look like im the only one keeping track.
+                Long enough to know
+which habits are annoying,
+and which ones secretly turn into longing. Here, you'll find simple things: game moments,
+unplanned photos,
+and feelings that grew
+without ever asking to be named.
+
+i made this website
+not because the story is grand,
+but because its real.
+because Dimitry has been
+someone behind the screen,
+beside me,
+and in ordinary days
+that quietly became worth remembering. if one day you read this
+and smile just a little,
+then this website has done its job.
+because its purpose is simple,
+to keep a story,
+without making it feel heavy.
+
+and if someone ever asks,
+“Why Dimitry?”
+ill probably answer casually:
+“i dont know. it just feels right, like you.”
+            </p>
+            
+        </div>
+    </section>
+
+    <!-- Category Navigation -->
+    <div class="categories">
+        
+    </div>
+
+    <!-- Movie Carousel Section -->
+    <section class="carousel-section">
+        <div class="carousel-header">
+            <div class="carousel-title">Designed for the Network Engineer who keeps my world connected</div>
+            
+        </div>
+        
+        <div class="carousel-container">
+            <button class="carousel-btn prev" onclick="scrollCarousel(-1)">‹</button>
+            <div class="carousel-wrapper" id="carouselWrapper">
+                <div class="carousel" id="movieCarousel">
+                    <div class="movie-card" onclick="selectMovie(0)">
+                        <img src="1.png" alt="Resident Evil" class="movie-poster">
+                    </div>
+                    <div class="movie-card" onclick="selectMovie(1)">
+                        <img src="2.png" alt="Sweet Home" class="movie-poster">
+                    </div>
+                    <div class="movie-card" onclick="selectMovie(2)">
+                        <img src="3.jpeg" alt="Evil Dead" class="movie-poster">
+                    </div>
+                    <div class="movie-card" onclick="selectMovie(3)">
+                        <img src="4.png" alt="The Conjuring" class="movie-poster">
+                    </div>
+                    <div class="movie-card" onclick="selectMovie(4)">
+                        <img src="5.jpeg" alt="Insidious" class="movie-poster">
+                    </div>
+                    <div class="movie-card" onclick="selectMovie(5)">
+                        <img src="6.jpeg" alt="Sinister" class="movie-poster">
+                    </div>
+                    <div class="movie-card" onclick="selectMovie(6)">
+                        <img src="8.jpeg" alt="Hereditary" class="movie-poster">
+                    </div>
+                    <div class="movie-card" onclick="selectMovie(7)">
+                        <img src="7.jpeg" alt="Midsommar" class="movie-poster">
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-btn next" onclick="scrollCarousel(1)">›</button>
+        </div>
+    </section>
+
+    <!-- Movie Details Section -->
+    <section class="details-section">
+        <div class="movie-info">
+            <div class="movie-category">MEMORIES</div>
+            <h2 class="movie-title" id="movieTitle">SWEET HOME</h2>
+            <div class="movie-meta">Date: <span id="movieYear">2020</span> | Day: <span id="movieRating">7.3</span></div>
+            
+            <div class="section-title">SHORT DESCRIPTION</div>
+            <p class="movie-description" id="movieDesc">
+                Seorang murid sekolah SMA yang bernama Hyun, telah kehilangan keluarganya dalam kecelakaan yang mengerikan, dia pun terpaksa meninggalkan rumahnya. Alhasil, Hyun harus melawan kenyataan baru yaktu berjuang menyelamatkan apa yang tersisa dari umat manusia sebelum terlambat.
+            </p>
+            
+            
+        </div>
+
+        <div class="trending-section">
+            <h3 class="trending-title">FULL VIEW</h3>
+            <div class="trending-video">
+                <img src="3.png" alt="Trending Video" id="trendingImage">
+                <div class="video-controls">
+                    
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="creator-info">
+            
+            <div>
+                <div class="creator-text">CREATED BY</div>
+                <div class="creator-name">RAISE IZZATI</div>
+            </div>
+        </div>
+        <div class="footer-badge">who built with quiet thoughts,</div>
+        <div class="footer-badge">for someone worth remembering</div>
+    </footer>
+
+    <script>
+
+        const music = document.getElementById('background-music');
+
+        // Fungsi untuk memulai musik
+        function playMusic() {
+            music.play().then(() => {
+                // Berhasil diputar
+                console.log("Musik diputar otomatis");
+            }).catch((error) => {
+                // Jika browser masih memblokir
+                console.log("Menunggu interaksi pengguna untuk memutar musik");
+            });
+        }
+
+        // Jalankan musik segera saat ada interaksi pertama (klik, scroll, atau sentuh)
+        ['click', 'scroll', 'touchstart', 'mousemove'].forEach(evt => 
+            window.addEventListener(evt, playMusic, { once: true })
+        );
+
+        const movies = [
+            {
+                title: "OUR FIRST COOP",
+                year: "25 December 2025",
+                rating: "Wednesday",
+                description: "you entered my world, and somehow it never felt single-player again. i dont think i met you by some dumb luck there are forces in the universe. unexplainable forces that decides and creaates what needs to be created.",
+                image: "1.png"
+            },
+            {
+                title: "WHEN FONTAINE TURNED GOLD",
+                year: "3 March 2024",
+                rating: "Monday",
+                description: "when Fontaine blushed at sunset, the water remembered the sky, and i remembered how it felt to pause. let me be your shelter when the winds are cruel. let me be the voice that says 'you are not alone. not now. not ever.' i dont run from your sadness, i sit with it. and to remind you: your pain doesnt scare me. your silence doesnt push me away. your tears only tie me closer to you. love, to me, means staying. and i will stay.",
+                image: "2.png"
+            },
+            {
+                title: "AGAINST THE DOMAIN",
+                year: "3 February 2024",
+                rating: "Monday",
+                description: "the boss hit hard, the cooldowns were long, but you stayed, so i did too. when the world feels cold, i will be the gentle breath that makes your heart back to life. when you feel lost, ill hold pieces of my heart, each one beating only for you. ill piece them together softly, to fill the spaces where your energy faded. i want to be the reason of your spark, until that numbness dissolves.",
+                image: "3.jpeg"
+            },
+            {
+                title: "A NIGHT OF LANTERNS",
+                year: "9 February 2024",
+                rating: "Sunday",
+                description: "the lanterns carried prayers, mine stayed, right beside you. you're allowed to take up space in my world without even asking. i could watch you scroll forever, hear the little noises you make when something catches your attention. and yeah, i know its silly, but i kind of love that i get to be the one next to you when it happens. small moments like this, i keep in my head. and im thingking, yeah... id stay here forever if you let me.",
+                image: "4.png"
+            },
+            {
+                title: "WHEN WE FIRST MEET",
+                year: "10 August 2025",
+                rating: "Sunday",
+                description: "we met without loading screens, just a quiet moment and your hand pulling me closer. you always look like you're trying to outrun a hundred things at once, but here, you're just... still. no expectations, no noise. how many times i did i hope to get to hold you in my arms? more than ill ever admit out loud. i cant help but wonder how someone like me got this moment at all.",
+                image: "5.jpeg"
+            },
+            {
+                title: "AFTER THE MOVIE, ICE CREAM",
+                year: "10 August 2025",
+                rating: "Sunday",
+                description: "melting ice cream, steady hearts. i could build the most indestructible buildings the world has ever seen and still crumble at your slightest touch. i now don't despise living life. it would be wrong to call him my summer love when he surpasses all the seasons there are. when the last of noise dies down and the stars are all there is, there is no one id rather be with but him.",
+                image: "6.jpeg"
+            },
+            {
+                title: "WHEN HE WASNT LOOKING",
+                year: "10 August 2025",
+                rating: "Sunday",
+                description: "YOU, when you didnt know, i was looking. i keep thinking about how soft you look when you're not thinking about me at all. how unfair it is that you can be this beautiful and this untouchable at the same time, and makes me want to shrink the world down to juts this spot. the more i know you, the more i realise i never want to know life without you.",
+                image: "8.jpeg"
+            },
+            {
+                title: "THE FACE OF HIM",
+                year: "5 December 2025",
+                rating: "Friday",
+                description: "your face, my favorite notification. you told me your imperfections, but you were worth loving. you told me your sins, but i love you, anyway. tell me the ugliest thing about you and watch me choose you despite it. i see you in every corner of every place you've never been my eyes are a vessel your soul lives in, your face is like braille your mind is my skin.",
+                image: "7.jpeg"
+            }
+        ];
+
+        let currentIndex = 0;
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isDragging = false;
+        let startPos = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+
+        const carousel = document.getElementById('movieCarousel');
+        const carouselWrapper = document.getElementById('carouselWrapper');
+
+        // Touch events for mobile
+        carouselWrapper.addEventListener('touchstart', touchStart);
+        carouselWrapper.addEventListener('touchmove', touchMove);
+        carouselWrapper.addEventListener('touchend', touchEnd);
+
+        // Mouse events for desktop
+        carouselWrapper.addEventListener('mousedown', touchStart);
+        carouselWrapper.addEventListener('mousemove', touchMove);
+        carouselWrapper.addEventListener('mouseup', touchEnd);
+        carouselWrapper.addEventListener('mouseleave', touchEnd);
+
+        function touchStart(event) {
+            isDragging = true;
+            startPos = getPositionX(event);
+            touchStartX = startPos;
+            carousel.style.transition = 'none';
+        }
+
+        function touchMove(event) {
+            if (!isDragging) return;
+            
+            const currentPosition = getPositionX(event);
+            currentTranslate = prevTranslate + currentPosition - startPos;
+            carousel.style.transform = `translateX(${currentTranslate}px)`;
+        }
+
+        function touchEnd(event) {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            touchEndX = getPositionX(event);
+            
+            const movedBy = touchEndX - touchStartX;
+            
+            // Swipe threshold - minimum distance to trigger scroll
+            if (Math.abs(movedBy) > 50) {
+                if (movedBy < 0) {
+                    // Swiped left - scroll right
+                    scrollCarousel(1);
+                } else {
+                    // Swiped right - scroll left
+                    scrollCarousel(-1);
+                }
+            } else {
+                // Reset position if swipe was too short
+                carousel.style.transition = 'transform 0.5s ease';
+                updateCarouselPosition();
+            }
+        }
+
+        function getPositionX(event) {
+            return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+        }
+
+        function updateCarouselPosition() {
+            const cardWidth = carousel.querySelector('.movie-card').offsetWidth;
+            const gap = 20;
+            const offset = -(cardWidth + gap) * currentIndex;
+            
+            prevTranslate = offset;
+            carousel.style.transform = `translateX(${offset}px)`;
+        }
+
+        function scrollCarousel(direction) {
+            carousel.style.transition = 'transform 0.5s ease';
+            const cardWidth = carousel.querySelector('.movie-card').offsetWidth;
+            const gap = 20;
+            const scrollAmount = (cardWidth + gap) * direction;
+            
+            currentIndex += direction;
+            
+            // Loop carousel
+            if (currentIndex < 0) {
+                currentIndex = movies.length - 1;
+            } else if (currentIndex >= movies.length) {
+                currentIndex = 0;
+            }
+            
+            const isMobile = window.innerWidth <= 768;
+            const cardsToShow = isMobile ? 1 : 4;
+            const maxIndex = Math.max(0, movies.length - cardsToShow);
+            
+            if (currentIndex > maxIndex) {
+                currentIndex = maxIndex;
+            }
+            
+            updateCarouselPosition();
+        }
+
+        function selectMovie(index) {
+            const movie = movies[index];
+            document.getElementById('movieTitle').textContent = movie.title;
+            document.getElementById('movieYear').textContent = movie.year;
+            document.getElementById('movieRating').textContent = movie.rating;
+            document.getElementById('movieDesc').textContent = movie.description;
+            document.getElementById('trendingImage').src = movie.image;
+            
+            // Highlight selected movie card
+            const cards = document.querySelectorAll('.movie-card');
+            cards.forEach((card, i) => {
+                if (i === index) {
+                    card.querySelector('.movie-poster').style.borderColor = '#dc0000';
+                } else {
+                    card.querySelector('.movie-poster').style.borderColor = 'transparent';
+                }
+            });
+        }
+
+        // Initialize first movie
+        selectMovie(1);
+    </script>
+</body>
+</html>
